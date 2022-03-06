@@ -1,0 +1,81 @@
+openapi: 3.0.0
+paths:
+  /placeOrder:
+    post:
+      operationId: PlaceOrderController_placeOrder
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePlaceOrderRequest'
+      responses:
+        '201':
+          description: サービスIDと金額を受け取り、注文と請求を作成する
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlaceOrderResponse'
+        '400':
+          description: リクエスト不正
+        '500':
+          description: サーバ内部エラー
+      tags:
+        - order
+info:
+  title: sample-api
+  description: coding test
+  version: 0.0.1
+  contact: {}
+tags:
+  - name: order
+    description: ''
+servers:
+  - url: http://localhost:3000
+    description: local
+    variables: {}
+components:
+  schemas:
+    CreatePlaceOrderRequest:
+      type: object
+      properties:
+        serviceId:
+          type: string
+          description: 注文するサービスのID
+          default: 0x3SUBYOax
+        amount:
+          type: number
+          description: 注文金額
+          default: 10000
+      required:
+        - serviceId
+        - amount
+    Order:
+      type: object
+      properties:
+        id:
+          type: string
+        serviceId:
+          type: string
+        status:
+          type: string
+      required:
+        - id
+        - serviceId
+        - status
+    PlaceOrderResponse:
+      type: object
+      properties:
+        data:
+          description: 注文情報
+          example: |-
+            {
+                "id": "5XGNMiCS56", 
+                "serviceId": "0x3SUBYOax",
+                "status": "CREATED"
+              }
+          allOf:
+            - $ref: '#/components/schemas/Order'
+      required:
+        - data
